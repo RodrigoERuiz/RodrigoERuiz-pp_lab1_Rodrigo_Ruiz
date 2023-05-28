@@ -1,4 +1,3 @@
-
 import json
 import re
 import csv
@@ -12,7 +11,6 @@ def leer_json(ruta_archivo):
 
 lista_jugadores_dream_team = leer_json(r"C:\Users\RODRIGO\Desktop\Parcial Dream Team\tu_usuario-pp_lab1_Rodrigo_Ruiz\dt.json")
 
-
 def generar_archivo_csv(lista_jugadores, nombre_archivo):
     with open(nombre_archivo, 'w', newline='') as archivo_csv:
         writer = csv.writer(archivo_csv)
@@ -21,7 +19,6 @@ def generar_archivo_csv(lista_jugadores, nombre_archivo):
             estadisticas = [str(valor) for valor in jugador["estadisticas"].values()]
             estadisticas_cadena = ','.join(estadisticas)
             writer.writerow([jugador["nombre"], jugador["posicion"], estadisticas_cadena])
-
 
 def quick_sort_lista_diccionarios(lista_diccionarios_original:list[dict],flag_orden:bool,clave:str)->list: #adaptación del codigo usado en clase
     lista_de = []
@@ -41,8 +38,7 @@ def quick_sort_lista_diccionarios(lista_diccionarios_original:list[dict],flag_or
                 if(diccionario[clave] < pivot[clave]):
                     lista_de.append(diccionario)   
                 else:
-                    lista_iz.append(diccionario)
-                                
+                    lista_iz.append(diccionario)                       
     lista_iz = quick_sort_lista_diccionarios(lista_iz,flag_orden,clave)
     lista_iz.append(pivot) 
     lista_de = quick_sort_lista_diccionarios(lista_de,flag_orden,clave)
@@ -55,7 +51,7 @@ def imprimir_menu_opciones():
     '''
     print("Menu:")
     print(" 1) Mostrar integrantes del Dream Team")
-    print(" 2) Buscar jugador por nombre y mostrar sus estadisticas")
+    print(" 2) Buscar jugador por indice y mostrar sus estadisticas")
     print(" 3) Generar archivo con estadisticas")
     print(" 4) Buscar logros por nombre de jugador")
     print(" 5) Calcular y mostrar el promedio de puntos por partido de todo el equipo del Dream Team, ordenado por nombre de manera ascendente.")
@@ -65,7 +61,7 @@ def imprimir_menu_opciones():
     print(" 9) Calcular y mostrar el jugador con la mayor cantidad de asistencias totales")
     print("10) Ingresar cantidad de puntos por partido y mostrar jugadores que los hayan superado ")
     print("11) Mostrar jugadores con mayor promedio de rebotes por partido que el nro ingresado")
-    print("12) Calcular y mostrar el jugador con la mayor cantidad de logros obtenidos")
+    print("12) Mostrar jugadores con mayor promedio de asistencias por partido que el nro ingresado")
     print("13) Calcular y mostrar el jugador con la mayor cantidad de robos totales.")
     print("14) Calcular y mostrar el jugador con la mayor cantidad de bloqueos totales.")
     print("15) Permitir al usuario ingresar un valor y mostrar los jugadores que hayan tenido un porcentaje de tiros libres superior a ese valor.")
@@ -92,8 +88,7 @@ def menu_principal():
         else:
             opcion = input("Ingrese una opción: ")
     return resultado
-
-#1     
+   
 def mostrar_datos_jugador(lista_jugadores:list[dict],clave_uno,clave_dos): 
     '''
     Recibe una lista de jugadores y dos claves en str
@@ -104,8 +99,7 @@ def mostrar_datos_jugador(lista_jugadores:list[dict],clave_uno,clave_dos):
     for jugador in lista_jugadores:
         print("{0})nombre: {1} posicion: {2}".format(contador,jugador[clave_uno],jugador[clave_dos]))
         contador += 1
-    
-    
+       
 def imprimir_roster_con_indice(lista):
     '''
     recibe una lista de jugadores
@@ -143,26 +137,16 @@ def imprimir_diccionario(diccionario):
     for clave,valor in diccionario.items():
         print("{0}: {1}".format(clave,valor).replace("_"," "))
         
-def filtar_jugador_por_indice_estadisticas(lista:list[dict])->str: #esto esta mal
+def filtar_jugador_por_indice_estadisticas(lista:list[dict])->str:
+    '''
+    Recibe una lista de jugadores
+    le solicita al usuario que elija un jugador
+    retorna una copia del jugador que ocupa el indice indicado por el usuar
+    '''
     dict_retorno = {}
     indice_buscado = pedir_ingreso_de_dato_y_validar()
     dict_retorno = lista[indice_buscado-1].copy()
-    return dict_retorno
-       
-def filtar_jugador_por_indice_logros(lista:list[dict])->str:
-    '''
-    Recibe una lista de jugadores
-    imprime por pantalla los nombres del equipo
-    solicita al usuario un nro de indice mediante la funcion auxiliar pedir_ingreso_de_dato_y_validar()
-    retorna un string con el nombre del jugador que ocupa ese indice y todos sus logros
-    '''
-    imprimir_roster_con_indice(lista)   
-    str_retorno = ""
-    indice_buscado = pedir_ingreso_de_dato_y_validar()
-    nombre = lista[indice_buscado-1]["nombre"] + "\n"
-    for logro in lista[indice_buscado-1]["logros"]:
-        str_retorno += logro + "\n"
-    return nombre+str_retorno
+    return dict_retorno      
 
 def listar_nombres_del_dream_team(list_jugadores:list[dict])->list:
     '''
@@ -174,45 +158,7 @@ def listar_nombres_del_dream_team(list_jugadores:list[dict])->list:
         if "nombre" in jugador: #probar quedarme con el indice
             lista_nombres.append(jugador["nombre"])
     return lista_nombres
-
-                                                                
-def recorrer_lista_dicc_y_extraer_indice(lista_completa_jugadores,lista_de_peores)->int:
-    '''
-    Recibe una lista de diccionarios, una clave y un valor
-    si la lista de diccionarios contiene el par clave valor pasado por parametro
-    retorna el indice donde lo encontró
-    si no encuentra ese par clave valor o la lista es vacia, retorna -1
-    '''
-    lista_indices = []
-    if not lista_completa_jugadores:
-        return -1
-    else:
-        ##################################################################################################################
-                 
-                return i
-    return -1
-
-
-
-# def buscar_jugador_por_nombre(lista_jugadores)->dict:     version vieja de buscar por nombre arreglar el 3 porque usa esta funcion
-#     '''
-#     Recibe una lista de jugadores
-#     Mediante la funcion listar_nombres_del_dream_team obtiene una lista con todos los nombres de los jugadores
-#     Solicita al usuario que ingrese el nombre del jugador buscado. Si existe en la lista de nombres, obtiene su 
-#     indice mediante la funcion recorrer_lista_dicc_y_extraer_indice
-#     Retorna el diccionario perteneciente a ese jugador
-#     '''
-#     lista_nombres_validos = listar_nombres_del_dream_team(lista_jugadores_dream_team)
-#     nombre_ingresado = ""
-#     while True:
-#         nombre_ingresado = input("ingrese el nombre completo del jugador: ").title()
-#         if nombre_ingresado in lista_nombres_validos:
-#             break
-#         print("Jugador no encontrado, vuelva a intentarlo: ")
-#     indice_del_jugador_buscado = recorrer_lista_dicc_y_extraer_indice(lista_jugadores,"nombre",nombre_ingresado)
-#     return lista_jugadores[indice_del_jugador_buscado]
-    
-########################################################FUNCION NUEVA###############################################   
+                                                           
 def buscar_jugador_por_nombre_bis(lista_jugadores)->list[dict]:
     '''
     Retorna una lista con los jugadores que hayan tenido coincidencias en el nombre
@@ -225,20 +171,11 @@ def buscar_jugador_por_nombre_bis(lista_jugadores)->list[dict]:
                 lista_coincidencias.append(jugador)
     return lista_coincidencias
     
-
-
 def imprimir_busqueda_por_nombre(lista_jugadores,clave):
     for jugador in lista_jugadores:
         print('\n{0} {1} {2}\n'.format("♦♦♦",jugador["nombre"],"♦♦♦"))
         imprimir_lista(jugador[clave])
-        
-
        
-#######################################################################################################################  
-    
-'''
-5)	Calcular y mostrar el promedio de puntos por partido de todo el equipo del Dream Team, ordenado por nombre de manera ascendente. 
-'''
 def excluir_al_peor_segun(lista_jugadores,apartado:str)->list[dict]:
     '''
     Recibe una lista de jugadores y un apartado estadistico
@@ -269,13 +206,15 @@ def calcular_y_mostrar_promedio_de_equipo(lista_jugadores:list[dict],apartado:st
     '''
     cantidad_jugadores = 0
     acumulador = 0
+    mensaje = ""
     if not lista_jugadores:                   
         return lista_jugadores
     else:
         for jugador in lista_jugadores:
             acumulador += jugador["estadisticas"][apartado]
             cantidad_jugadores += 1
-    print("{0}: {1}".format("Promedio total",acumulador/cantidad_jugadores))
+    mensaje = "{0}: {1}".format("Promedio total",acumulador/cantidad_jugadores)
+    return mensaje
 
 def mostrar_promedio_puntos_por_partido_por_jugador(lista_jugadores,clave_para_ordenar,menor_a_mayor=True):
     '''
@@ -293,9 +232,6 @@ def mostrar_promedio_puntos_por_partido_por_jugador(lista_jugadores,clave_para_o
         lista_promedios_ordenada = quick_sort_lista_diccionarios(lista_promedios,menor_a_mayor,clave_para_ordenar)
     return generar_string_desde_lista_diccionarios(lista_promedios_ordenada,"nombre","promedio_puntos_por_partido")
 
-'''
-6)	Permitir al usuario ingresar el nombre de un jugador y mostrar si ese jugador es miembro del Salón de la Fama del Baloncesto.
-'''
 def is_hall_of_fame(jugador)->bool:
     '''
     recibe un jugador y retorna True si ser hall of fame está entre sos logros
@@ -317,11 +253,10 @@ def buscar_hall_oh_fame_por_nombre(lista_jugadores)->str:
         else:
             print('\n{0} {1}'.format(jugador["nombre"],"No es Hall of fame"))
             
-#############################################nueva funcion###########################################################
-def buscar_max_min_segun_estadistica(lista_jugadores:list[dict],apartado:str,estoy_buscando_el_max=True)->list[dict]: #modificar el comentario
+def buscar_max_min_segun_estadistica(lista_jugadores:list[dict],apartado:str,estoy_buscando_el_max=True)->list[dict]:
     '''
     Recibe una lista de jugadores, un apartado estadistico y una booleano (True por maximo-False por minimo)
-    Retorna el jugador con el menor/mayor record en el apartado estadistico pasado como parametro
+    Retorna un lista con el/los jugador/es con  menor/mayor record en el apartado estadistico pasado como parametro
     '''
     jugador_buscado = [lista_jugadores[0]]
     for jugador in lista_jugadores[1:]:
@@ -344,8 +279,6 @@ def imprimir_busqueda_max_min_estadistica(lista_jugadores:list[dict],clave):
     for jugador in lista_jugadores:
         print("{0}: {1}".format(jugador["nombre"],jugador["estadisticas"][clave]))
 
-
-
 def buscar_max_min_segun_longitud_de_lista(lista_jugadores:list[dict],apartado:str,estoy_buscando_el_max=True)->dict:#lo mismo que la de arriba pero fuera de estadisticas
     '''
     Recibe una lista de jugadores, un apartado estadistico y una booleano (True por maximo-False por minimo)
@@ -364,7 +297,6 @@ def buscar_max_min_segun_longitud_de_lista(lista_jugadores:list[dict],apartado:s
         print("Error el apartado estadistico no posee una lista")
     return jugador_buscado
 
-
 def es_un_numero_valido(numero:str)->bool:
     '''
     recibe un nuemero en formato string
@@ -372,7 +304,6 @@ def es_un_numero_valido(numero:str)->bool:
     en caso afirmativo retorna True sino False
     '''
     return re.match(r"^(?:0|[1-9][0-9]*)(?:\.\d+)?$",numero)
-
 
 def buscar_jugadores_con_apartado_mayor_a(lista_jugadores,apartado)->list[dict]:
     '''
@@ -394,9 +325,7 @@ def buscar_jugadores_con_apartado_mayor_a(lista_jugadores,apartado)->list[dict]:
     if not lista_retorno:
         print("Ningun jugador pertence a este selecto grupo") 
     return lista_retorno
-    
- 
-                     
+                      
 def dream_team_app(lista_heroes):
     while True:
         respuesta = menu_principal()
@@ -413,7 +342,7 @@ def dream_team_app(lista_heroes):
                 imprimir_busqueda_por_nombre(buscar_jugador_por_nombre_bis(lista_jugadores_dream_team),"logros")
             case "5":
                 print(mostrar_promedio_puntos_por_partido_por_jugador(lista_jugadores_dream_team,"nombre",True))
-                print("{0}: {1}".format("Promedio de equipo",calcular_y_mostrar_promedio_de_equipo(lista_jugadores_dream_team,"promedio_puntos_por_partido")))           
+                print("{1}".format("Promedio de equipo",calcular_y_mostrar_promedio_de_equipo(lista_jugadores_dream_team,"promedio_puntos_por_partido")))           
             case "6":
                 buscar_hall_oh_fame_por_nombre(lista_jugadores_dream_team)          
             case "7":
@@ -448,7 +377,7 @@ def dream_team_app(lista_heroes):
                 jugadores_buscados = excluir_al_peor_segun(lista_jugadores_dream_team,"promedio_puntos_por_partido")
                 for jugador in jugadores_buscados: #meter dentro de otra funcion
                     print("{0}: {1}".format(jugador["nombre"],jugador["estadisticas"]["promedio_puntos_por_partido"]))
-                calcular_y_mostrar_promedio_de_equipo(jugadores_buscados,'promedio_puntos_por_partido')
+                print(calcular_y_mostrar_promedio_de_equipo(jugadores_buscados,'promedio_puntos_por_partido'))
             case "17":
                 jugador_buscado = buscar_max_min_segun_longitud_de_lista(lista_jugadores_dream_team,"logros",True)
                 print("{0}".format(jugador_buscado["nombre"]))
@@ -466,8 +395,6 @@ def dream_team_app(lista_heroes):
             case "21":
                 break
                 
-        input("\nPulse enter para continuar\n")
-            
-                       
-
+        input("\nPulse enter para continuar\n")   
+                
 dream_team_app(lista_jugadores_dream_team)
