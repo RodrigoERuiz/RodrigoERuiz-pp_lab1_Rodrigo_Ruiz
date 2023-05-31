@@ -16,9 +16,13 @@ def generar_archivo_csv(lista_jugadores, nombre_archivo):
         writer = csv.writer(archivo_csv)
         
         for jugador in lista_jugadores:
+            string = '{0},{1},{2},{3},{4},{5},'
             estadisticas = [str(valor) for valor in jugador["estadisticas"].values()]
             estadisticas_cadena = ','.join(estadisticas)
-            writer.writerow([jugador["nombre"], jugador["posicion"], estadisticas_cadena])
+            #writer.writerow([jugador["nombre"], jugador["posicion"], estadisticas_cadena])
+            
+            
+
 
 def quick_sort_lista_diccionarios(lista_diccionarios_original:list[dict],flag_orden:bool,clave:str)->list: #adaptación del codigo usado en clase
     lista_de = []
@@ -71,6 +75,9 @@ def imprimir_menu_opciones():
     print("19) Calcular y mostrar el jugador con la mayor cantidad de temporadas jugadas")
     print("20) Permitir al usuario ingresar un valor y mostrar los jugadores , ordenados por posición en la cancha, que hayan tenido un porcentaje de tiros de campo superior a ese valor.")
     print("21) Salir")
+    print("22) Mostrar cantidad de jugadores por cada posicion")
+    print("23)(no terminado) Mostrar la lista de jugadores ordenadas por la cantidad de All-Star de forma descendente ")
+    print("24) Determinar qué jugador tiene las mejores estadísticas en cada valor")
 
 def menu_principal():
     '''
@@ -81,7 +88,7 @@ def menu_principal():
     imprimir_menu_opciones()
     opcion = input("Ingrese una opción: ")
     while True:
-        patron = r'^(1[0-9]|20|21|[1-9])$'
+        patron = r'^(1[0-9]|2[0-5]|1[0-9]|20|21|[1-9])$'
         if bool(re.match(patron,opcion)):
             resultado = opcion
             break
@@ -170,7 +177,7 @@ def buscar_jugador_por_nombre_bis(lista_jugadores)->list[dict]:
             if re.search(nombre_buscado,jugador["nombre"]):
                 lista_coincidencias.append(jugador)
     return lista_coincidencias
-    
+        
 def imprimir_busqueda_por_nombre(lista_jugadores,clave):
     for jugador in lista_jugadores:
         print('\n{0} {1} {2}\n'.format("♦♦♦",jugador["nombre"],"♦♦♦"))
@@ -325,6 +332,52 @@ def buscar_jugadores_con_apartado_mayor_a(lista_jugadores,apartado)->list[dict]:
     if not lista_retorno:
         print("Ningun jugador pertence a este selecto grupo") 
     return lista_retorno
+
+def filtrar_jugadores_por_posicion(lista_jugadores:list[dict],posicion:str)->list[dict]:
+    lista_retorno = []
+    for jugador in lista_jugadores:
+        if jugador['posicion'] == posicion:
+            lista_retorno.append(jugador)
+    return lista_retorno
+
+def obtener_todas_las_posiciones_validas(lista_jugadores):
+    lista_posiciones_retorno = []
+    for jugador in lista_jugadores:
+        for clave,valor in jugador.items():
+            if clave == "posicion":
+                lista_posiciones_retorno.append(valor)
+    lista_posiciones_retorno = set(lista_posiciones_retorno)
+    return list(lista_posiciones_retorno)
+
+
+def mostrar_cantidad_jugadores_por_posicion(lista_jugadores):
+    lista_posiciones = obtener_todas_las_posiciones_validas(lista_jugadores)
+    for posicion in lista_posiciones:
+        lista_jugadores_filtrados_por_posicion = filtrar_jugadores_por_posicion(lista_jugadores,posicion)
+        print('{0}: {1}'.format(posicion,len(lista_jugadores_filtrados_por_posicion)))
+
+
+
+def es_all_star(jugador)->bool:
+    for logro in jugador["logros"]:
+        if re.search("All-Star",logro):
+            return True  
+        
+# def determinar_cantidad_de_allstar(lista_jugadores): incompleto
+#     for jugador in lista_jugadores:
+#         if es_all_star(jugador):
+#             for logro in jugador["logros"]:
+#                 jugador['cantidad All_Stars'] = re.search(r'(\d+)', logro).group()
+
+
+def mostrar_al_mejor_en_cada_apartado(lista_jugadores):
+    lista_estadisticas = lista_jugadores[0]["estadisticas"].keys()
+    for estadistica in lista_estadisticas:
+        jugadores_encontrados = buscar_max_min_segun_estadistica(lista_jugadores,estadistica,True)
+        print('\nMayor cantidad de {0}'.format(estadistica.replace("_"," ")))
+        imprimir_busqueda_max_min_estadistica(jugadores_encontrados,estadistica)
+    
+
                       
 def dream_team_app(lista_heroes):
     while True:
@@ -394,6 +447,14 @@ def dream_team_app(lista_heroes):
                 imprimir_busqueda_max_min_estadistica(jugadores_buscados,'porcentaje_tiros_de_campo')
             case "21":
                 break
+            case "22":
+                    mostrar_cantidad_jugadores_por_posicion(lista_jugadores_dream_team)
+            case "23":
+                pass
+            case "24":
+                mostrar_al_mejor_en_cada_apartado(lista_jugadores_dream_team)
+                
+                
                 
         input("\nPulse enter para continuar\n")   
                 
